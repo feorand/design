@@ -41,19 +41,10 @@ namespace DependencyElimination
             return result;
         }
       
-        private static IEnumerable<string> GetHrefs(string input, ref int totalCount)
+        private static IEnumerable<string> GetHrefs(string input)
 		{
 			var matches = Regex.Matches(input, @"\Whref=[""'](.*?)[""'\s>]").Cast<Match>();
-			var count = 0;
-            var result = new List<string>();
-			foreach (var match in matches)
-			{
-                result.Add(match.Groups[1].Value);
-				count++;
-			}
-			Console.WriteLine("found {0} links", count);
-            totalCount += count;
-            return result;
+            return matches.Select(match => match.Groups[1].Value).ToList();
 		}
 
         private static void WriteToFile(IEnumerable<string> input, TextWriter output)
@@ -69,18 +60,21 @@ namespace DependencyElimination
 
         private static void Main()
         {
-            var sw = Stopwatch.StartNew();
             var hrefs = new List<string>();
             var totalCount = 0;
-            var contents = string.Empty;
+
+            var sw = Stopwatch.StartNew();
 
             foreach (var input in GetAvailableAddresses())
             {
                 Console.WriteLine(input);
                 try
                 {
-                    contents = HttpCrawl(input);
-                    hrefs.AddRange(GetHrefs(contents, ref totalCount));
+                    var contents = HttpCrawl(input);
+                    var foundHrefs = GetHrefs(contents).ToList();
+                    Console.WriteLine("found {0} links", foundHrefs.Count());
+                    hrefs.AddRange(foundHrefs);
+                    totalCount += foundHrefs.Count();
                 }
                 catch (HttpNotSuccessfullException e)
                 {
