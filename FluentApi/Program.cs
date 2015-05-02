@@ -6,8 +6,6 @@ namespace FluentTask
 	{
 		private static void Main()
 		{
-
-
 			var behaviour = new Behavior()
 				.Say("Привет мир!")
 				.UntilKeyPressed(b => b
@@ -23,16 +21,6 @@ namespace FluentTask
 				.Delay(TimeSpan.FromMilliseconds(2000));
 
 			behaviour.Execute();
-
-            //var b = new Behavior()
-            //.UntilKeyPressed(bb => bb.Say("1111").Say("2222"))
-            //    .Say("Hello")
-            //    .Say("World")
-            //    .Delay(TimeSpan.FromSeconds(1))
-            //    .Jump(JumpHeight.High);
-
-            //b.Execute();
-
 		}
 	}
 }
